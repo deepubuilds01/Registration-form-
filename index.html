@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Student Registration Form</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1b2a49; --gold:#a98642; --paper:#fbf9f4; --card:#ffffff; --ink:#22262e; --muted:#667085;
+  --line:#d9d3c4; --err:#a4262c; --ok:#2f6b4f; --field:#ffffff; --head-ink:#ffffff;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --navy:#0f1930; --gold:#c9a45c; --paper:#12151c; --card:#1a1e28; --ink:#e8e6df; --muted:#9aa1b0;
+    --line:#343a4a; --err:#ff8a8f; --ok:#7fd1a6; --field:#12151c; --head-ink:#f3efe3; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --navy:#0f1930; --gold:#c9a45c; --paper:#12151c; --card:#1a1e28; --ink:#e8e6df; --muted:#9aa1b0;
+  --line:#343a4a; --err:#ff8a8f; --ok:#7fd1a6; --field:#12151c; --head-ink:#f3efe3; color-scheme: dark;
+}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Source Sans 3",Calibri,Arial,sans-serif;font-size:16px;line-height:1.55}
+.page{max-width:860px;margin:0 auto;padding:24px 16px 48px}
+header{background:var(--navy);color:var(--head-ink);text-align:center;padding:28px 20px 24px;border-top:5px solid var(--gold);border-bottom:1px solid var(--gold)}
+.crest{width:56px;height:56px;margin:0 auto 10px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;font-family:"Libre Baskerville",Georgia,serif;font-size:24px;color:var(--gold)}
+header h1{margin:0;font-family:"Libre Baskerville",Georgia,"Times New Roman",serif;font-weight:700;font-size:clamp(1.35rem,4.5vw,1.9rem);letter-spacing:.02em}
+header p{margin:6px 0 0;color:var(--gold);font-style:italic;font-family:"Libre Baskerville",Georgia,serif;font-size:.95rem}
+form{background:var(--card);border:1px solid var(--line);border-top:0;padding:8px clamp(16px,4vw,36px) 28px}
+fieldset{border:0;margin:0;padding:0}
+legend{font-family:"Libre Baskerville",Georgia,serif;font-weight:700;font-size:1.15rem;color:var(--navy);padding:0;width:100%;margin:26px 0 14px;border-bottom:2px solid var(--gold);padding-bottom:6px}
+:root[data-theme="dark"] legend{color:var(--gold)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) legend{color:var(--gold)}}
+.note{color:var(--muted);font-size:.9rem;margin:18px 0 0}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 20px}
+.full{grid-column:1/-1}
+.dobrow{display:grid;grid-template-columns:1fr 1.5fr 1.2fr;gap:8px}
+@media (max-width:600px){.grid{grid-template-columns:1fr}}
+label,.lbl{display:block;font-weight:600;font-size:.92rem;margin-bottom:5px}
+.req::after{content:" *";color:var(--err)}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:3px;padding:10px 12px;min-height:44px}
+textarea{resize:vertical;min-height:84px}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold)}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--err)}
+.msg{display:none;color:var(--err);font-size:.85rem;margin-top:4px}
+.field.invalid .msg{display:block}
+.radios{display:flex;gap:18px;flex-wrap:wrap;min-height:44px;align-items:center}
+.radios label{display:flex;align-items:center;gap:7px;font-weight:400;margin:0}
+.radios input{width:auto;min-height:0}
+.check{display:flex;gap:10px;align-items:flex-start}
+.check input{width:20px;min-height:0;margin-top:3px}
+.check label{font-weight:400;margin:0}
+.actions{display:flex;gap:12px;justify-content:flex-end;margin-top:28px;flex-wrap:wrap}
+button{font:inherit;font-weight:600;min-height:46px;padding:0 26px;border-radius:3px;cursor:pointer;border:1px solid var(--navy)}
+.primary{background:var(--navy);color:var(--head-ink);border-color:var(--gold)}
+.primary:hover{filter:brightness(1.15)}
+.secondary{background:transparent;color:var(--navy)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .secondary{color:var(--ink);border-color:var(--line)}}
+:root[data-theme="dark"] .secondary{color:var(--ink);border-color:var(--line)}
+@media (max-width:600px){.actions button{width:100%}}
+.overlay{position:fixed;inset:0;background:rgba(10,14,25,.6);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.overlay.open{display:flex}
+.modal{background:var(--card);max-width:520px;width:100%;max-height:90vh;overflow:auto;border-top:5px solid var(--gold);padding:24px;border-radius:3px}
+.modal h2{font-family:"Libre Baskerville",Georgia,serif;margin:0 0 4px;color:var(--ok);font-size:1.25rem}
+.modal .id{font-weight:600;margin-bottom:14px}
+.modal dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 18px;font-size:.95rem}
+.modal dt{color:var(--muted)}
+.modal dd{margin:0;overflow-wrap:anywhere}
+@media print{header,.actions,.overlay:not(.open){display:none}.overlay{position:static;background:none}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div class="crest" aria-hidden="true">R</div>
+    <h1>Student Registration Form</h1>
+    <p>Academic Year 2026–2027</p>
+  </header>
+
+  <form id="reg" novalidate>
+    <p class="note">Fields marked with an asterisk (*) are required. Please enter details exactly as they appear on your official documents.</p>
+
+    <fieldset>
+      <legend>Personal information</legend>
+      <div class="grid">
+        <div class="field"><label class="req" for="first">First name</label><input id="first" name="first" autocomplete="given-name" required><div class="msg"></div></div>
+        <div class="field"><label class="req" for="last">Last name</label><input id="last" name="last" autocomplete="family-name" required><div class="msg"></div></div>
+        <div class="field"><span class="lbl req">Date of birth</span>
+          <div class="dobrow"><select id="dd" aria-label="Day"></select><select id="mm" aria-label="Month"></select><select id="yy" aria-label="Year"></select></div>
+          <input id="dob" name="dob" type="hidden" required><div class="msg"></div></div>
+        <div class="field"><span class="lbl req">Gender</span>
+          <div class="radios" role="radiogroup" aria-label="Gender">
+            <label><input type="radio" name="gender" value="Male"> Male</label>
+            <label><input type="radio" name="gender" value="Female"> Female</label>
+            <label><input type="radio" name="gender" value="Other"> Other</label>
+          </div><div class="msg"></div></div>
+        <div class="field"><label for="nat">Nationality</label><input id="nat" name="nat" autocomplete="country-name"></div>
+        <div class="field"><label for="idno">National ID / passport number</label><input id="idno" name="idno"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Contact details</legend>
+      <div class="grid">
+        <div class="field"><label class="req" for="email">Email address</label><input id="email" name="email" type="email" autocomplete="email" required><div class="msg"></div></div>
+        <div class="field"><label class="req" for="phone">Phone number</label><input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="e.g. +1 555 123 4567" required><div class="msg"></div></div>
+        <div class="field full"><label class="req" for="addr">Residential address</label><textarea id="addr" name="addr" autocomplete="street-address" required></textarea><div class="msg"></div></div>
+        <div class="field"><label class="req" for="city">City</label><input id="city" name="city" autocomplete="address-level2" required><div class="msg"></div></div>
+        <div class="field"><label for="zip">Postal code</label><input id="zip" name="zip" autocomplete="postal-code"></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Academic details</legend>
+      <div class="grid">
+        <div class="field"><label class="req" for="program">Programme</label>
+          <select id="program" name="program" required>
+            <option value="">Select a programme</option>
+            <option>Bachelor of Arts</option><option>Bachelor of Science</option><option>Bachelor of Commerce</option>
+            <option>Bachelor of Engineering</option><option>Master of Business Administration</option><option>Master of Science</option>
+          </select><div class="msg"></div></div>
+        <div class="field"><label class="req" for="year">Year of study</label>
+          <select id="year" name="year" required>
+            <option value="">Select year</option><option>First year</option><option>Second year</option><option>Third year</option><option>Fourth year</option>
+          </select><div class="msg"></div></div>
+        <div class="field"><label class="req" for="prev">Previous institution</label><input id="prev" name="prev" required><div class="msg"></div></div>
+        <div class="field"><label class="req" for="grade">Previous result (%)</label><input id="grade" name="grade" type="number" min="0" max="100" step="0.01" required><div class="msg"></div></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Parent or guardian</legend>
+      <div class="grid">
+        <div class="field"><label class="req" for="gname">Full name</label><input id="gname" name="gname" required><div class="msg"></div></div>
+        <div class="field"><label for="rel">Relationship</label>
+          <select id="rel" name="rel"><option>Father</option><option>Mother</option><option>Legal guardian</option><option>Other</option></select></div>
+        <div class="field"><label class="req" for="gphone">Phone number</label><input id="gphone" name="gphone" type="tel" required><div class="msg"></div></div>
+        <div class="field"><label for="gemail">Email address</label><input id="gemail" name="gemail" type="email"><div class="msg"></div></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Declaration</legend>
+      <div class="field">
+        <div class="check"><input type="checkbox" id="agree" name="agree"><label for="agree">I declare that the information provided is accurate and complete, and I agree to abide by the rules and regulations of the institution.</label></div>
+        <div class="msg">Please accept the declaration to continue.</div>
+      </div>
+    </fieldset>
+
+    <div class="actions">
+      <button type="reset" class="secondary" id="clear">Clear form</button>
+      <button type="submit" class="primary">Submit registration</button>
+    </div>
+  </form>
+</div>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <div class="modal">
+    <h2 id="mt">Registration received</h2>
+    <div class="id" id="rid"></div>
+    <dl id="summary"></dl>
+    <div class="actions" style="margin-top:0">
+      <button class="secondary" id="print" type="button">Print</button>
+      <button class="primary" id="done" type="button">New registration</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var form = document.getElementById('reg');
+  var overlay = document.getElementById('overlay');
+  var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  var phoneRe = /^[+()\-.\s\d]{7,18}$/;
+
+  function wrap(el){ return el.closest('.field'); }
+  function setError(el, text){
+    var f = wrap(el); if(!f) return;
+    f.classList.add('invalid');
+    var m = f.querySelector('.msg'); if(m && text) m.textContent = text;
+  }
+  function clearError(el){ var f = wrap(el); if(f) f.classList.remove('invalid'); }
+
+  function check(el){
+    var v = (el.value || '').trim();
+    if(el.type === 'checkbox'){
+      if(!el.checked){ setError(el); return false; }
+      clearError(el); return true;
+    }
+    if(el.required && !v){ setError(el, 'This field is required.'); return false; }
+    if(v && el.type === 'email' && !emailRe.test(v)){ setError(el, 'Enter a valid email address.'); return false; }
+    if(v && el.type === 'tel' && !phoneRe.test(v)){ setError(el, 'Enter a valid phone number.'); return false; }
+    if(el.id === 'dob' && v){
+      var p = v.split('-'), d = new Date(+p[0], +p[1] - 1, +p[2]), now = new Date();
+      if(d.getDate() !== +p[2]){ setError(el, 'Enter a valid date.'); return false; }
+      var age = now.getFullYear() - d.getFullYear() - ((now.getMonth() < d.getMonth() || (now.getMonth() === d.getMonth() && now.getDate() < d.getDate())) ? 1 : 0);
+      if(d > now){ setError(el, 'Date of birth cannot be in the future.'); return false; }
+      if(age < 15){ setError(el, 'Applicants must be at least 15 years old.'); return false; }
+    }
+    if(el.id === 'grade' && v){
+      var n = parseFloat(v);
+      if(isNaN(n) || n < 0 || n > 100){ setError(el, 'Enter a result between 0 and 100.'); return false; }
+    }
+    clearError(el); return true;
+  }
+
+  function checkGender(){
+    var ok = !!form.querySelector('input[name="gender"]:checked');
+    var f = form.querySelector('input[name="gender"]').closest('.field');
+    f.classList.toggle('invalid', !ok);
+    var m = f.querySelector('.msg'); if(m) m.textContent = 'Please select an option.';
+    return ok;
+  }
+
+  form.addEventListener('blur', function(e){
+    var t = e.target;
+    if(t.matches('input:not([type=radio]):not([type=checkbox]), select, textarea') && !t.closest('.dobrow')) check(t);
+  }, true);
+  form.addEventListener('input', function(e){
+    if(wrap(e.target) && wrap(e.target).classList.contains('invalid') && e.target.type !== 'radio' && !e.target.closest('.dobrow')) check(e.target);
+  });
+  form.addEventListener('change', function(e){
+    if(e.target.name === 'gender') checkGender();
+    if(e.target.id === 'agree') check(e.target);
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var ok = true, first = null;
+    form.querySelectorAll('input:not([type=radio]), select, textarea').forEach(function(el){
+      if(el.closest('.dobrow')) return;
+      if(!check(el)){ ok = false; if(!first) first = el; }
+    });
+    if(!checkGender()){ ok = false; if(!first) first = form.querySelector('input[name="gender"]'); }
+    if(!ok){ first.focus(); return; }
+    showSummary();
+  });
+
+  form.addEventListener('reset', function(){
+    document.getElementById('dob').value = '';
+    form.querySelectorAll('.field.invalid').forEach(function(f){ f.classList.remove('invalid'); });
+  });
+
+  var dd = document.getElementById('dd'), mm = document.getElementById('mm'), yy = document.getElementById('yy'), dobEl = document.getElementById('dob');
+  function opt(s, v, t){ var o = document.createElement('option'); o.value = v; o.textContent = t; s.appendChild(o); }
+  opt(dd, '', 'Day'); opt(mm, '', 'Month'); opt(yy, '', 'Year');
+  for(var i = 1; i <= 31; i++) opt(dd, i, i);
+  ['January','February','March','April','May','June','July','August','September','October','November','December'].forEach(function(m, i){ opt(mm, i + 1, m); });
+  var cy = new Date().getFullYear();
+  for(var y = cy - 15; y >= cy - 80; y--) opt(yy, y, y);
+  function updateDob(){
+    if(dd.value && mm.value && yy.value){
+      dobEl.value = yy.value + '-' + ('0' + mm.value).slice(-2) + '-' + ('0' + dd.value).slice(-2);
+      check(dobEl);
+    } else { dobEl.value = ''; }
+  }
+  [dd, mm, yy].forEach(function(s){ s.addEventListener('change', updateDob); });
+
+  function showSummary(){
+    var yr = new Date().getFullYear();
+    var num = 'STU-' + yr + '-' + String(Math.floor(Math.random() * 900000) + 100000);
+    document.getElementById('rid').textContent = 'Registration number: ' + num;
+    var rows = [
+      ['Name', form.first.value.trim() + ' ' + form.last.value.trim()],
+      ['Date of birth', form.dob.value],
+      ['Gender', form.querySelector('input[name="gender"]:checked').value],
+      ['Email', form.email.value.trim()],
+      ['Phone', form.phone.value.trim()],
+      ['Programme', form.program.value],
+      ['Year of study', form.year.value],
+      ['Guardian', form.gname.value.trim() + ' (' + form.rel.value + ')']
+    ];
+    var dl = document.getElementById('summary');
+    dl.innerHTML = '';
+    rows.forEach(function(r){
+      var dt = document.createElement('dt'); dt.textContent = r[0];
+      var dd = document.createElement('dd'); dd.textContent = r[1];
+      dl.appendChild(dt); dl.appendChild(dd);
+    });
+    overlay.classList.add('open');
+    document.getElementById('done').focus();
+  }
+
+  document.getElementById('done').addEventListener('click', function(){
+    overlay.classList.remove('open');
+    form.reset();
+    window.scrollTo(0, 0);
+  });
+  document.getElementById('print').addEventListener('click', function(){ window.print(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') overlay.classList.remove('open');
+  });
+})();
+</script>
+</body>
+</html>
